@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/mtagstyle/cineplex/pkg/types"
+	"github.com/mtagstyle/go-cineplex/pkg/types"
 )
 
 type ShowtimesAPI interface {

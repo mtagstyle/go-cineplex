@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/mtagstyle/cineplex/pkg/theatres"
+	"github.com/mtagstyle/go-cineplex/pkg/theatres"
 )
 
 func main() {
