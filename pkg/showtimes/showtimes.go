@@ -14,8 +14,7 @@ type ShowtimesAPI interface {
 	GetSeatMapData(input *GetSeatMapDataInput) (*GetSeatMapDataOutput, error)
 }
 
-type showtimesAPIClient struct {
-}
+type showtimesAPIClient struct {}
 
 type GetShowtimesInput struct {
 	TheatreID string
@@ -95,3 +94,6 @@ func (t *showtimesAPIClient) buildFullRequestPath(in *GetShowtimesInput) (string
 //===================
 // GetSeatMap
 //===================
+func (t *showtimesAPIClient) GetSeatMapData(input *GetSeatMapDataInput) (*GetSeatMapDataOutput, error) {
+	return nil, fmt.Errorf("Not implemented")
+}

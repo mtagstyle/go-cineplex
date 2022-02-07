@@ -30,21 +30,6 @@ func NewTheatresAPIClient() *theatresAPIClient {
 	return &theatresAPIClient{}
 }
 
-func (t *theatresAPIClient) buildFullRequestPath(in *GetTheatresInput) (string, error) {
-	req, err := http.NewRequest("GET", theatresEndpoint, nil)
-	if err != nil {
-		return "", err
-	}
-
-	q := req.URL.Query()
-	q.Add("language", "en-us")
-	q.Add("range", fmt.Sprintf("%d", in.Range))
-	q.Add("skip", "0")
-	q.Add("take", "1000")
-	req.URL.RawQuery = q.Encode()
-
-	return req.URL.String(), nil
-}
 func (t *theatresAPIClient) GetTheatres(input *GetTheatresInput) (*GetTheatresOutput, error) {
 	query, err := t.buildFullRequestPath(input)
 	if err != nil {
@@ -67,4 +52,20 @@ func (t *theatresAPIClient) GetTheatres(input *GetTheatresInput) (*GetTheatresOu
 	}
 
 	return &GetTheatresOutput{Output: output}, nil
+}
+
+func (t *theatresAPIClient) buildFullRequestPath(in *GetTheatresInput) (string, error) {
+	req, err := http.NewRequest("GET", theatresEndpoint, nil)
+	if err != nil {
+		return "", err
+	}
+
+	q := req.URL.Query()
+	q.Add("language", "en-us")
+	q.Add("range", fmt.Sprintf("%d", in.Range))
+	q.Add("skip", "0")
+	q.Add("take", "1000")
+	req.URL.RawQuery = q.Encode()
+
+	return req.URL.String(), nil
 }

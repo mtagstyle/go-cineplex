@@ -1,6 +1,3 @@
-module github.com/mtagstyle/cineplex
+module github.com/mtagstyle/go-cineplex
 
-go 1.15
-
-require (
-)
+go 1.13
