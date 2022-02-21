@@ -31,7 +31,9 @@ type GetSeatMapDataInput struct {
 	TheatreID      string
 }
 
-type GetSeatMapDataOutput struct{}
+type GetSeatMapDataOutput struct {
+	Output types.SeatMapOutput
+}
 
 const showtimesBaseEndpoint = "https://www.cineplex.com/api/v1/theatres"
 
@@ -105,14 +107,18 @@ func (t *showtimesAPIClient) GetSeatMapData(input *GetSeatMapDataInput) (*GetSea
 	}
 	resp, err := http.PostForm("https://onlineticketing.cineplex.com/SeatMap/GetSeatMapData", data)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
-	fmt.Printf(string(body))
 
-	return nil, fmt.Errorf("Not impelemented")
+	output := types.SeatMapOutput{}
+	if err := json.Unmarshal(body, &output); err != nil {
+		return nil, err
+	}
+
+	return &GetSeatMapDataOutput{Output: output}, nil
 }
