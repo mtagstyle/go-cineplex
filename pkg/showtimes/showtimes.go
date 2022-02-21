@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	"github.com/mtagstyle/go-cineplex/pkg/types"
 )
@@ -14,7 +15,7 @@ type ShowtimesAPI interface {
 	GetSeatMapData(input *GetSeatMapDataInput) (*GetSeatMapDataOutput, error)
 }
 
-type showtimesAPIClient struct {}
+type showtimesAPIClient struct{}
 
 type GetShowtimesInput struct {
 	TheatreID string
@@ -25,7 +26,10 @@ type GetShowtimesOutput struct {
 	Output types.ShowtimeOutput
 }
 
-type GetSeatMapDataInput struct{}
+type GetSeatMapDataInput struct {
+	VistaSessionID string
+	TheatreID      string
+}
 
 type GetSeatMapDataOutput struct{}
 
@@ -95,5 +99,20 @@ func (t *showtimesAPIClient) buildFullRequestPath(in *GetShowtimesInput) (string
 // GetSeatMap
 //===================
 func (t *showtimesAPIClient) GetSeatMapData(input *GetSeatMapDataInput) (*GetSeatMapDataOutput, error) {
-	return nil, fmt.Errorf("Not implemented")
+	data := url.Values{
+		"VistaSessionId": {fmt.Sprint(input.VistaSessionID)},
+		"LocationId":     {fmt.Sprint(input.TheatreID)},
+	}
+	resp, err := http.PostForm("https://onlineticketing.cineplex.com/SeatMap/GetSeatMapData", data)
+	if err != nil {
+		panic(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf(string(body))
+
+	return nil, fmt.Errorf("Not impelemented")
 }
