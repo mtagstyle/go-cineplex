@@ -126,7 +126,7 @@ type ShowtimeInfo struct {
 		IsSeatSelectionMapEnabled              bool    `json:"IsSeatSelectionMapEnabled"`
 		IsUsherpointEnabled                    bool    `json:"IsUsherpointEnabled"`
 		VistaSalesServerWebServiceURL          string  `json:"VistaSalesServerWebServiceUrl"`
-		TimeZoneOffset                         int     `json:"TimeZoneOffset"`
+		TimeZoneOffset                         float64 `json:"TimeZoneOffset"`
 		ServerPrefix                           string  `json:"ServerPrefix"`
 		Address1                               string  `json:"Address1"`
 		City                                   string  `json:"City"`
