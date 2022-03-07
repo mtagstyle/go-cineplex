@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 
 	"github.com/mtagstyle/go-cineplex/pkg/types"
 )
@@ -13,8 +12,6 @@ import (
 type MoviesAPI interface {
 	GetMovies(input *GetMoviesInput) (*GetMoviesOutput, error)
 }
-
-type moviesAPIClient struct{}
 
 type GetMoviesInput struct {
 	Language                 string
@@ -26,6 +23,12 @@ type GetMoviesInput struct {
 	Take                     int
 }
 
+func NewMoviesAPIClient() *moviesAPIClient {
+	return &moviesAPIClient{}
+}
+
+type moviesAPIClient struct{}
+
 const moviesBaseEndpoint = "https://www.cineplex.com/api/v1/movies"
 
 type GetMoviesOutput struct {
@@ -33,10 +36,6 @@ type GetMoviesOutput struct {
 }
 
 func (m *moviesAPIClient) GetMovies(input *GetMoviesInput) (*GetMoviesOutput, error) {
-	return nil, fmt.Errorf("not implemented")
-}
-
-func (m *moviesAPIClient) GetShowtimes(input *GetMoviesInput) (*GetMoviesOutput, error) {
 	query, err := m.buildFullRequestPath(input)
 	if err != nil {
 		return nil, err
