@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/hashicorp/go-retryablehttp"
 	"github.com/mtagstyle/go-cineplex/pkg/types"
 )
 
@@ -15,7 +16,9 @@ type ShowtimesAPI interface {
 	GetSeatMapData(input *GetSeatMapDataInput) (*GetSeatMapDataOutput, error)
 }
 
-type showtimesAPIClient struct{}
+type showtimesAPIClient struct {
+	client *retryablehttp.Client
+}
 
 type GetShowtimesInput struct {
 	TheatreID string
@@ -38,7 +41,12 @@ type GetSeatMapDataOutput struct {
 const showtimesBaseEndpoint = "https://www.cineplex.com/api/v1/theatres"
 
 func NewShowtimesAPIClient() *showtimesAPIClient {
-	return &showtimesAPIClient{}
+	client := &showtimesAPIClient{
+		client: retryablehttp.NewClient(),
+	}
+
+	client.client.RetryMax = 10
+	return client
 }
 
 //===================
@@ -54,7 +62,7 @@ func (t *showtimesAPIClient) GetShowtimes(input *GetShowtimesInput) (*GetShowtim
 		return nil, err
 	}
 
-	resp, err := http.Get(query)
+	resp, err := t.client.Get(query)
 	if err != nil {
 		return nil, err
 	}
@@ -105,7 +113,7 @@ func (t *showtimesAPIClient) GetSeatMapData(input *GetSeatMapDataInput) (*GetSea
 		"VistaSessionId": {fmt.Sprint(input.VistaSessionID)},
 		"LocationId":     {fmt.Sprint(input.TheatreID)},
 	}
-	resp, err := http.PostForm("https://onlineticketing.cineplex.com/SeatMap/GetSeatMapData", data)
+	resp, err := t.client.PostForm("https://onlineticketing.cineplex.com/SeatMap/GetSeatMapData", data)
 	if err != nil {
 		return nil, err
 	}
